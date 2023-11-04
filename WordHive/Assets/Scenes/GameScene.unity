@@ -1584,10 +1584,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: LetterSlot (5)
       objectReference: {fileID: 0}
-    - target: {fileID: 3607805521710205805, guid: fa321b5b326349a409eac6d118eb32ec, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4129988163962677430, guid: fa321b5b326349a409eac6d118eb32ec, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

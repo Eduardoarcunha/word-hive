@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 
 public class LetterSlot : MonoBehaviour, IDropHandler
 {
+
     public void OnDrop(PointerEventData eventData)
     {
         if (transform.childCount == 0)
@@ -24,5 +25,7 @@ public class LetterSlot : MonoBehaviour, IDropHandler
             currentDraggable.transform.SetParent(draggableLetter.parentAfterDrag);
             draggableLetter.parentAfterDrag = transform;
         }
+        
+
     }
 }

@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System;
 
 public class DraggableLetter : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public Image image;
     [HideInInspector] public Transform parentAfterDrag;
+
+    public static event Action OnLetterSlotDrop;
+
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -29,5 +33,6 @@ public class DraggableLetter : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         Debug.Log("OnEndDrag");
         transform.SetParent(parentAfterDrag);
         image.raycastTarget = true;
+        OnLetterSlotDrop?.Invoke();
     }
 }
