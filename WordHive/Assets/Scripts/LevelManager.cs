@@ -8,16 +8,18 @@ using System;
 
 public class LevelManager : MonoBehaviour
 {
+    // private string url = "https://felipesbs.pythonanywhere.com/getGrid?lang=en&level=1";
+
     private const int GRID_SIZE = 25;
     private const int WORD_LENGTH = 5;
 
-    private string[] answerWords = {"ambos", "aroma", "amada", "arara", "broca", "seada"};
+    private string[] answerWords = {"AMBOS", "AROMA", "AMADA", "ARARA", "BROCA", "SEADA"};
     private GameObject grid;
     private Dictionary<int, char?> answerDict = new Dictionary<int, char?>();
 
     private Color greenColor = new Color32(24, 111, 101, 255);  // #186f65
-    private Color yellowColor = new Color32(251, 216, 93, 255); // #fbd85d
-    private Color whiteColor = new Color32(210, 224, 251, 255); // #d2e0fb
+    private Color yellowColor = new Color32(255, 193, 2, 255);  // #FFC102
+    private Color whiteColor = new Color32(190, 191, 173, 255); // #d2e0fb
 
 
     void Awake()
@@ -32,7 +34,6 @@ public class LevelManager : MonoBehaviour
         string randomWord = RandomizeAnsDict();
         SetChilds(randomWord);
         CheckBoard();
-        
     }
 
     void PopulateAnswerDictionary()
@@ -132,7 +133,6 @@ public class LevelManager : MonoBehaviour
                 grid.transform.GetChild(i).GetChild(0).GetComponentInChildren<Image>().color = greenColor;
             } else
             {
-                // grid.transform.GetChild(i).GetChild(0).GetComponentInChildren<Image>().color = Color.red;
                 int[] wordsIndex = GetLetterWordsIndex(i);
                 bool incorrectPosition = CheckWord(letter, wordsIndex[0]) || CheckWord(letter, wordsIndex[1]);
                 if (incorrectPosition)
@@ -164,7 +164,6 @@ public class LevelManager : MonoBehaviour
             {
                 letterAppearancesInWord++;
                 int gridIdx = rowWord ? wordIdx * WORD_LENGTH * 2 + i : (wordIdx - (WORD_LENGTH / 2 + 1)) * 2 + i * WORD_LENGTH;
-                // Debug.Log("wordIdx: " + wordIdx + " i: " + i + " gridIdx: " + gridIdx);
                 if (word[i] == grid.transform.GetChild(gridIdx).GetChild(0).GetComponentInChildren<TextMeshProUGUI>().text[0])
                 {
                     letterInCorrectPlaceAppearances++;

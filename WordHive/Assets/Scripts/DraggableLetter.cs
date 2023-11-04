@@ -31,8 +31,26 @@ public class DraggableLetter : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public void OnEndDrag(PointerEventData eventData)
     {
         Debug.Log("OnEndDrag");
+        StartCoroutine(ReturnToOriginalPosition());
+        // transform.SetParent(parentAfterDrag);
+        // image.raycastTarget = true;
+        // OnLetterSlotDrop?.Invoke();
+    }
+
+
+    private IEnumerator ReturnToOriginalPosition()
+    {
+        float speed = 5000.0f; // Units per second.
+        Vector3 destinyPosition = parentAfterDrag.position;
+
+        while (Vector3.Distance(transform.position, destinyPosition) > 0.01f)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, destinyPosition, speed * Time.deltaTime);
+            yield return null;
+        }
+
         transform.SetParent(parentAfterDrag);
         image.raycastTarget = true;
-        OnLetterSlotDrop?.Invoke();
+        OnLetterSlotDrop?.Invoke();    
     }
 }
