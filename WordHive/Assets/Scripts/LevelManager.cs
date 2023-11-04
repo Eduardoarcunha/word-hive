@@ -15,9 +15,9 @@ public class LevelManager : MonoBehaviour
     private GameObject grid;
     private Dictionary<int, char?> answerDict = new Dictionary<int, char?>();
 
-    private Color greenColor = new Color32(24, 111, 101, 255);
-    private Color yellowColor = new Color32(251, 216, 93, 255);
-    private Color whiteColor = new Color32(210, 224, 251, 255);
+    private Color greenColor = new Color32(24, 111, 101, 255);  // #186f65
+    private Color yellowColor = new Color32(251, 216, 93, 255); // #fbd85d
+    private Color whiteColor = new Color32(210, 224, 251, 255); // #d2e0fb
 
 
     void Awake()
