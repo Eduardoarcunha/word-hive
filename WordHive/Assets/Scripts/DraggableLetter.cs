@@ -17,7 +17,7 @@ public class DraggableLetter : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         Debug.Log("OnBeginDrag");
         parentAfterDrag = transform.parent;
-        transform.SetParent(transform.root);
+        transform.SetParent(transform.parent.parent.parent.parent);
         transform.SetAsLastSibling();
         image.raycastTarget = false;
     }
@@ -32,9 +32,6 @@ public class DraggableLetter : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         Debug.Log("OnEndDrag");
         StartCoroutine(ReturnToOriginalPosition());
-        // transform.SetParent(parentAfterDrag);
-        // image.raycastTarget = true;
-        // OnLetterSlotDrop?.Invoke();
     }
 
 

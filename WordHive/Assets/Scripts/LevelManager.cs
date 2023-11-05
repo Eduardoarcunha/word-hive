@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 using TMPro;
 using System.Linq;
 using System;
 
 public class LevelManager : MonoBehaviour
 {
-    // private string url = "https://felipesbs.pythonanywhere.com/getGrid?lang=en&level=1";
+    public static LevelManager instance;
+    private string url = "https://felipesbs.pythonanywhere.com/getGrid?lang=en&level=1";
 
     private const int GRID_SIZE = 25;
     private const int WORD_LENGTH = 5;
@@ -24,16 +26,58 @@ public class LevelManager : MonoBehaviour
 
     void Awake()
     {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+            
+        } else {
+            Destroy(gameObject);
+        }
+
         DraggableLetter.OnLetterSlotDrop += CheckBoard;
     }
     
     void Start()
     {
+        StartCoroutine(RequestGame(url));
+    }
+
+    private IEnumerator RequestGame(string uri)
+    {
+        Debug.Log("Requesting game");
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
+        {
+            // Make the request and wait for a response
+            yield return webRequest.SendWebRequest();
+
+            if (webRequest.result == UnityWebRequest.Result.ConnectionError)
+            {
+                // Log any errors
+                Debug.LogError("Error: " + webRequest.error);
+            }
+            else
+            {
+                // Log the response (this will be your JSON)
+                Debug.Log("Received: " + webRequest.downloadHandler.text);
+                StartGame();
+
+                // Optionally, you can parse the JSON here using libraries like SimpleJSON, JSONUtility, etc.
+                // For example, using Unity's built-in JSONUtility:
+                // YourClass responseObject = JsonUtility.FromJson<YourClass>(webRequest.downloadHandler.text);
+            }
+        }
+    }
+
+    void StartGame()
+    {
+        UIManager.instance.ShowGamePanel();
         grid = GameObject.FindWithTag("Grid");
         PopulateAnswerDictionary();
         string randomWord = RandomizeAnsDict();
         SetChilds(randomWord);
         CheckBoard();
+        UIManager.instance.HideLoadingPanel();
     }
 
     void PopulateAnswerDictionary()
