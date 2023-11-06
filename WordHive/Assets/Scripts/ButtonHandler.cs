@@ -20,7 +20,7 @@ public class ButtonHandler : MonoBehaviour
 
     private float scaleSpeed = .5f;
     private float colorChangeSpeed = .5f;
-    private float transitionTime = .5f;
+    private float transitionTime = .2f;
 
     private Coroutine startGameCoroutine;
 

@@ -2,17 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 using TMPro;
 using System.Linq;
 using System;
 
 public class LevelManager : MonoBehaviour
 {
-    // private string url = "https://felipesbs.pythonanywhere.com/getGrid?lang=en&level=1";
+    public static LevelManager instance;
+    private string url = "https://felipesbs.pythonanywhere.com/getGrid?lang=en&level=1";
 
     private const int GRID_SIZE = 25;
     private const int WORD_LENGTH = 5;
+    private const float RANDOM_LEVEL = .75f;
 
+    private WordList wordList;
     private string[] answerWords = {"AMBOS", "AROMA", "AMADA", "ARARA", "BROCA", "SEADA"};
     private GameObject grid;
     private Dictionary<int, char?> answerDict = new Dictionary<int, char?>();
@@ -24,16 +28,62 @@ public class LevelManager : MonoBehaviour
 
     void Awake()
     {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+            
+        } else {
+            Destroy(gameObject);
+        }
+
         DraggableLetter.OnLetterSlotDrop += CheckBoard;
     }
     
     void Start()
     {
+        StartCoroutine(RequestGame(url));
+    }
+
+    private IEnumerator RequestGame(string uri)
+    {
+        Debug.Log("Requesting game");
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
+        {
+            // Make the request and wait for a response
+            yield return webRequest.SendWebRequest();
+
+            if (webRequest.result == UnityWebRequest.Result.ConnectionError)
+            {
+                // Log any errors
+                Debug.LogError("Error: " + webRequest.error);
+            }
+            else
+            {
+                // Log the response (this will be your JSON)
+                Debug.Log("Received: " + webRequest.downloadHandler.text);
+                wordList = JsonUtility.FromJson<WordList>(webRequest.downloadHandler.text);
+                // Debug.Log(wordList.words[0].word);
+                for (int i = 0; i < wordList.words.Length; i++)
+                {
+                    answerWords[i] = wordList.words[i].word;
+                    Debug.Log(answerWords[i]);
+                }
+
+                StartGame();
+            }
+        }
+    }
+
+    void StartGame()
+    {
+        UIManager.instance.ShowGamePanel();
         grid = GameObject.FindWithTag("Grid");
         PopulateAnswerDictionary();
         string randomWord = RandomizeAnsDict();
         SetChilds(randomWord);
         CheckBoard();
+        UIManager.instance.HideLoadingPanel();
     }
 
     void PopulateAnswerDictionary()
@@ -92,10 +142,13 @@ public class LevelManager : MonoBehaviour
         int n = charArray.Length;
         for (int i = n - 1; i > 0; i--)
         {
-            int j = UnityEngine.Random.Range(0, i + 1);
-            char temp = charArray[i];
-            charArray[i] = charArray[j];
-            charArray[j] = temp;
+            if (UnityEngine.Random.Range(0f, 1f) < RANDOM_LEVEL)
+            {
+                int j = UnityEngine.Random.Range(0, i + 1);
+                char temp = charArray[i];
+                charArray[i] = charArray[j];
+                charArray[j] = temp;
+            }
         }
 
         return new string(charArray);
