@@ -83,7 +83,7 @@ public class LevelManager : MonoBehaviour
         string randomWord = RandomizeAnsDict();
         SetChilds(randomWord);
         CheckBoard();
-        UIManager.instance.HideLoadingPanel();
+        Loader.instance.WipeOut();
     }
 
     void PopulateAnswerDictionary()

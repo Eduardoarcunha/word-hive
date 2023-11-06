@@ -11,7 +11,7 @@ public class ButtonHandler : MonoBehaviour
 {
     public Vector3 targetScale = new Vector3(1.1f, 1.1f, 1.1f);
     private Vector3 originalScale;
-    public Color targetColor = new Color32(220, 161, 29, 255);
+    public Color targetColor = new Color32(220, 161, 29, 255); // #dca11d
     private Color originalColor;
     private TMP_Text buttonText;
 
@@ -49,6 +49,7 @@ public class ButtonHandler : MonoBehaviour
 
     public IEnumerator PlayGameCoroutine()
     {
+        Loader.instance.LoadScene(1);   
         float elapsedTime = 0;
 
         while (elapsedTime < transitionTime)
@@ -78,9 +79,6 @@ public class ButtonHandler : MonoBehaviour
         if (buttonImage != null && gameObject.CompareTag("ImageButton"))
         {
             buttonImage.color = targetColor;
-        }
-
-        SceneManager.LoadScene("GameScene");
-        
+        }    
     }
 }
