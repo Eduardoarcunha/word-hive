@@ -14,7 +14,9 @@ public class LevelManager : MonoBehaviour
 
     private const int GRID_SIZE = 25;
     private const int WORD_LENGTH = 5;
+    private const float RANDOM_LEVEL = .75f;
 
+    private WordList wordList;
     private string[] answerWords = {"AMBOS", "AROMA", "AMADA", "ARARA", "BROCA", "SEADA"};
     private GameObject grid;
     private Dictionary<int, char?> answerDict = new Dictionary<int, char?>();
@@ -60,11 +62,15 @@ public class LevelManager : MonoBehaviour
             {
                 // Log the response (this will be your JSON)
                 Debug.Log("Received: " + webRequest.downloadHandler.text);
-                StartGame();
+                wordList = JsonUtility.FromJson<WordList>(webRequest.downloadHandler.text);
+                // Debug.Log(wordList.words[0].word);
+                for (int i = 0; i < wordList.words.Length; i++)
+                {
+                    answerWords[i] = wordList.words[i].word;
+                    Debug.Log(answerWords[i]);
+                }
 
-                // Optionally, you can parse the JSON here using libraries like SimpleJSON, JSONUtility, etc.
-                // For example, using Unity's built-in JSONUtility:
-                // YourClass responseObject = JsonUtility.FromJson<YourClass>(webRequest.downloadHandler.text);
+                StartGame();
             }
         }
     }
@@ -136,10 +142,13 @@ public class LevelManager : MonoBehaviour
         int n = charArray.Length;
         for (int i = n - 1; i > 0; i--)
         {
-            int j = UnityEngine.Random.Range(0, i + 1);
-            char temp = charArray[i];
-            charArray[i] = charArray[j];
-            charArray[j] = temp;
+            if (UnityEngine.Random.Range(0f, 1f) < RANDOM_LEVEL)
+            {
+                int j = UnityEngine.Random.Range(0, i + 1);
+                char temp = charArray[i];
+                charArray[i] = charArray[j];
+                charArray[j] = temp;
+            }
         }
 
         return new string(charArray);

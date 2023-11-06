@@ -9,45 +9,70 @@ public class DraggableLetter : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 {
     public Image image;
     [HideInInspector] public Transform parentAfterDrag;
+    private float scaleTime = .1f;
+    private float baseScale = 1f;
+    private float selectedScale = 1.3f;
 
     public static event Action OnLetterSlotDrop;
 
-
     public void OnBeginDrag(PointerEventData eventData)
     {
-        Debug.Log("OnBeginDrag");
         parentAfterDrag = transform.parent;
         transform.SetParent(transform.parent.parent.parent.parent);
         transform.SetAsLastSibling();
+        StartCoroutine(ScaleOverTime(new Vector3(selectedScale, selectedScale, selectedScale)));
         image.raycastTarget = false;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        Debug.Log("OnDrag");
         transform.position = eventData.position;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        Debug.Log("OnEndDrag");
         StartCoroutine(ReturnToOriginalPosition());
+    }
+
+    private IEnumerator ScaleOverTime(Vector3 target)
+    {
+        float elapsedTime = 0;
+        while (elapsedTime < scaleTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float nextScale = baseScale  + (elapsedTime / scaleTime) * (selectedScale - baseScale);
+            transform.localScale = new Vector3(nextScale, nextScale, nextScale);
+            yield return null;
+        }
+        transform.localScale = new Vector3(selectedScale, selectedScale, selectedScale);
     }
 
 
     private IEnumerator ReturnToOriginalPosition()
     {
-        float speed = 5000.0f; // Units per second.
+        float elapsedTime = 0.0f;
+        float totalDuration = .15f;
+
+        Vector3 startPosition = transform.position;
         Vector3 destinyPosition = parentAfterDrag.position;
 
-        while (Vector3.Distance(transform.position, destinyPosition) > 0.01f)
+        Vector3 startScale = transform.localScale;
+        Vector3 endScale = new Vector3(baseScale, baseScale, baseScale);
+
+        while (elapsedTime < totalDuration)
         {
-            transform.position = Vector3.MoveTowards(transform.position, destinyPosition, speed * Time.deltaTime);
+            elapsedTime += Time.deltaTime;
+            float progress = Mathf.Clamp01(elapsedTime / totalDuration);
+
+            transform.position = Vector3.Lerp(startPosition, destinyPosition, progress);
+            transform.localScale = Vector3.Lerp(startScale, endScale, progress);
             yield return null;
         }
 
+        transform.position = destinyPosition;
         transform.SetParent(parentAfterDrag);
         image.raycastTarget = true;
-        OnLetterSlotDrop?.Invoke();    
+        transform.localScale = endScale;
+        OnLetterSlotDrop?.Invoke();
     }
 }
