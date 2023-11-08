@@ -6,79 +6,112 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 
-
 public class ButtonHandler : MonoBehaviour
 {
-    public Vector3 targetScale = new Vector3(1.1f, 1.1f, 1.1f);
+    [SerializeField] private Vector3 targetScale = new Vector3(1.1f, 1.1f, 1.1f);
+    [SerializeField] private Color targetColor = new Color32(220, 161, 29, 255); // #dca11d
+    private float transitionTime = .7f;
+
     private Vector3 originalScale;
-    public Color targetColor = new Color32(220, 161, 29, 255); // #dca11d
     private Color originalColor;
     private TMP_Text buttonText;
-
     private Image buttonImage;
-    private Color originalImageColor;
+    private Coroutine btnAnimationCoroutine;
 
-    private float scaleSpeed = .5f;
-    private float colorChangeSpeed = .5f;
-    private float transitionTime = .2f;
 
-    private Coroutine startGameCoroutine;
-
-    private void Start()
+    private void Awake()
     {
-        originalScale = transform.localScale;
         buttonText = GetComponentInChildren<TMP_Text>();
+        buttonImage = GetComponentInChildren<Image>();
+        originalScale = transform.localScale;
+        CacheOriginalColor();
+    }
+
+    private void CacheOriginalColor()
+    {
         if (buttonText != null)
         {
             originalColor = buttonText.color;
         }
-        buttonImage = GetComponentInChildren<Image>();
-        if (buttonImage != null)
+        else if (buttonImage != null)
         {
-            originalImageColor = buttonImage.color;
+            originalColor = buttonImage.color;
         }
     }
 
     public void PlayGame()
     {
-        if (startGameCoroutine == null)
+        if (btnAnimationCoroutine == null)
         {
-            startGameCoroutine = StartCoroutine(PlayGameCoroutine());
-        }    
+            Loader.instance.LoadScene(1);
+            btnAnimationCoroutine = StartCoroutine(SimpleBtnAnimation());
+        }
     }
 
-    public IEnumerator PlayGameCoroutine()
+    public void ReturnToMenu()
     {
-        Loader.instance.LoadScene(1);   
+        if (btnAnimationCoroutine == null)
+        {
+            Loader.instance.LoadScene(0);
+            btnAnimationCoroutine = StartCoroutine(SimpleBtnAnimation());
+        }
+    }
+
+    public void PlayAnotherGame()
+    {
+        if (btnAnimationCoroutine == null)
+        {
+            Loader.instance.LoadScene(1);
+            btnAnimationCoroutine = StartCoroutine(SimpleBtnAnimation());
+        }
+    }
+
+    private IEnumerator SimpleBtnAnimation()
+    {
+        yield return StartCoroutine(AnimateScaleAndColor(targetScale, targetColor));
+        yield return StartCoroutine(AnimateScaleAndColor(originalScale, originalColor));
+
+        btnAnimationCoroutine = null;
+    }
+
+    private IEnumerator AnimateScaleAndColor(Vector3 scale, Color color)
+    {
+        Vector3 startScale = transform.localScale;
+        Color startColor = buttonText != null ? buttonText.color : buttonImage.color;
         float elapsedTime = 0;
 
         while (elapsedTime < transitionTime)
         {
             elapsedTime += Time.deltaTime;
+            float progress = elapsedTime / transitionTime;
+            float easedProgress = EaseInOutQuad(progress);
 
-            transform.localScale = Vector3.Lerp(transform.localScale, targetScale, elapsedTime * scaleSpeed);
+            transform.localScale = Vector3.Lerp(startScale, scale, easedProgress);
             if (buttonText != null)
             {
-                buttonText.color = Color.Lerp(buttonText.color, targetColor, elapsedTime * colorChangeSpeed);
+                buttonText.color = Color.Lerp(startColor, color, easedProgress);
             }
-
-            if (buttonImage != null && gameObject.CompareTag("ImageButton"))
+            if (buttonImage != null)
             {
-                buttonImage.color = Color.Lerp(buttonImage.color, targetColor, elapsedTime * colorChangeSpeed);
+                buttonImage.color = Color.Lerp(startColor, color, easedProgress);
             }
 
             yield return null;
         }
 
-        transform.localScale = targetScale;
+        transform.localScale = scale;
         if (buttonText != null)
         {
-            buttonText.color = targetColor;
+            buttonText.color = color;
         }
-
-        if (buttonImage != null && gameObject.CompareTag("ImageButton"))
+        if (buttonImage != null)
         {
-            buttonImage.color = targetColor;
-        }    
+            buttonImage.color = color;
+        }
+    }
+
+    private float EaseInOutQuad(float t)
+    {
+        return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
     }
 }

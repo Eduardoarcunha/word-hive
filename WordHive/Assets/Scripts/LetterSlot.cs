@@ -16,6 +16,7 @@ public class LetterSlot : MonoBehaviour, IDropHandler
         }
         else
         {
+            if (transform.GetChild(0).GetComponent<DraggableLetter>().enabled == false) return;
             GameObject dropped = eventData.pointerDrag;
             StartCoroutine(GoToNewPosition(dropped));
         }

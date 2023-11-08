@@ -9,15 +9,15 @@ using System;
 
 public class LevelManager : MonoBehaviour
 {
-    public static LevelManager instance;
+    // public static LevelManager instance;
     private string url = "https://felipesbs.pythonanywhere.com/getGrid?lang=en&level=1";
 
     private const int GRID_SIZE = 25;
     private const int WORD_LENGTH = 5;
-    private const float RANDOM_LEVEL = .75f;
+    private const float RANDOM_LEVEL = .3f;
 
     private WordList wordList;
-    private string[] answerWords = {"AMBOS", "AROMA", "AMADA", "ARARA", "BROCA", "SEADA"};
+    private string[] answerWords = { "AMBOS", "AROMA", "AMADA", "ARARA", "BROCA", "SEADA" };
     private GameObject grid;
     private Dictionary<int, char?> answerDict = new Dictionary<int, char?>();
 
@@ -28,18 +28,9 @@ public class LevelManager : MonoBehaviour
 
     void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-            
-        } else {
-            Destroy(gameObject);
-        }
-
         DraggableLetter.OnLetterSlotDrop += CheckBoard;
     }
-    
+
     void Start()
     {
         StartCoroutine(RequestGame(url));
@@ -61,13 +52,12 @@ public class LevelManager : MonoBehaviour
             else
             {
                 // Log the response (this will be your JSON)
-                Debug.Log("Received: " + webRequest.downloadHandler.text);
+                // Debug.Log("Received: " + webRequest.downloadHandler.text);
                 wordList = JsonUtility.FromJson<WordList>(webRequest.downloadHandler.text);
-                // Debug.Log(wordList.words[0].word);
                 for (int i = 0; i < wordList.words.Length; i++)
                 {
                     answerWords[i] = wordList.words[i].word;
-                    Debug.Log(answerWords[i]);
+                    // Debug.Log(answerWords[i]);
                 }
 
                 StartGame();
@@ -77,8 +67,8 @@ public class LevelManager : MonoBehaviour
 
     void StartGame()
     {
-        UIManager.instance.ShowGamePanel();
         grid = GameObject.FindWithTag("Grid");
+        Debug.Log(grid);
         PopulateAnswerDictionary();
         string randomWord = RandomizeAnsDict();
         SetChilds(randomWord);
@@ -106,7 +96,7 @@ public class LevelManager : MonoBehaviour
         {
             int collumnWordsStartIndex = (WORD_LENGTH / 2 + 1);
             int collumnLetter = index / WORD_LENGTH;
-            return answerWords[collumnWordsStartIndex + (index % WORD_LENGTH) / 2][collumnLetter];   
+            return answerWords[collumnWordsStartIndex + (index % WORD_LENGTH) / 2][collumnLetter];
         }
 
         return null;
@@ -122,9 +112,9 @@ public class LevelManager : MonoBehaviour
                 continue;
             }
 
-            grid.transform.GetChild(i).GetChild(0).GetComponentInChildren<TextMeshProUGUI>().text = word[j].ToString();
+            GameObject letter = grid.transform.GetChild(i).GetChild(0).gameObject;
+            letter.GetComponentInChildren<TextMeshProUGUI>().text = word[j].ToString();
             j++;
-
         }
     }
 
@@ -133,7 +123,8 @@ public class LevelManager : MonoBehaviour
         string word = "";
         foreach (KeyValuePair<int, char?> entry in answerDict)
         {
-            if (entry.Value != null){
+            if (entry.Value != null)
+            {
                 word += entry.Value;
             }
         }
@@ -174,29 +165,41 @@ public class LevelManager : MonoBehaviour
 
     void CheckBoard()
     {
+        bool allLettersInCorrectPlace = true;
         for (int i = 0; i < GRID_SIZE; i++)
         {
-            if (i / WORD_LENGTH % 2 == 1 && i % 2 == 0)
+            if (i / WORD_LENGTH % 2 == 1 && i % 2 == 0) continue;
+
+            // Debug.Log(grid);
+            GameObject letterObj = grid.transform.GetChild(i).GetChild(0).gameObject;
+            char letter = letterObj.GetComponentInChildren<TextMeshProUGUI>().text[0];
+            if (letterObj.GetComponent<DraggableLetter>().enabled == false)
             {
                 continue;
             }
-            char letter = grid.transform.GetChild(i).GetChild(0).GetComponentInChildren<TextMeshProUGUI>().text[0];
+
             if (answerDict[i] == letter)
             {
-                grid.transform.GetChild(i).GetChild(0).GetComponentInChildren<Image>().color = greenColor;
-            } else
+                letterObj.GetComponentInChildren<Image>().color = greenColor;
+                letterObj.GetComponent<DraggableLetter>().enabled = false; // Disable green letters
+            }
+            else
             {
+                allLettersInCorrectPlace = false;
                 int[] wordsIndex = GetLetterWordsIndex(i);
                 bool incorrectPosition = CheckWord(letter, wordsIndex[0]) || CheckWord(letter, wordsIndex[1]);
                 if (incorrectPosition)
                 {
-                    grid.transform.GetChild(i).GetChild(0).GetComponentInChildren<Image>().color = yellowColor;
-                } else
+                    letterObj.GetComponentInChildren<Image>().color = yellowColor;
+                }
+                else
                 {
-                    grid.transform.GetChild(i).GetChild(0).GetComponentInChildren<Image>().color = whiteColor;
+                    letterObj.GetComponentInChildren<Image>().color = whiteColor;
                 }
             }
         }
+        Debug.Log(allLettersInCorrectPlace);
+        if (allLettersInCorrectPlace) EndGame();
     }
 
     bool CheckWord(char letter, int wordIdx)
@@ -224,5 +227,15 @@ public class LevelManager : MonoBehaviour
             }
         }
         return letterInCorrectPlaceAppearances < letterAppearancesInWord;
+    }
+
+    void EndGame()
+    {
+        UIManager.instance.ShowEndGamePanel();
+    }
+
+    void OnDestroy()
+    {
+        DraggableLetter.OnLetterSlotDrop -= CheckBoard;
     }
 }

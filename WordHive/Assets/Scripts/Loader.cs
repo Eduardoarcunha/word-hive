@@ -16,10 +16,13 @@ public class Loader : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
-            
-        } else {
+
+        }
+        else
+        {
             Destroy(gameObject);
         }
+
     }
 
     public void LoadScene(int sceneId)
@@ -29,16 +32,26 @@ public class Loader : MonoBehaviour
 
     IEnumerator LoadSceneAsync(int sceneId)
     {
-        animator.SetTrigger("In");
-        yield return new WaitForSeconds(2f);
-
+        WipeIn();
+        yield return new WaitForSeconds(4f);
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneId);
-        
+
+
         while (!operation.isDone)
         {
             yield return null;
         }
 
+        if (sceneId != 1)
+        {
+            yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1 && !animator.IsInTransition(0));
+            WipeOut();
+        }
+    }
+
+    public void WipeIn()
+    {
+        animator.SetTrigger("In");
     }
 
     public void WipeOut()

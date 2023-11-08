@@ -40,7 +40,7 @@ public class DraggableLetter : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         while (elapsedTime < scaleTime)
         {
             elapsedTime += Time.deltaTime;
-            float nextScale = baseScale  + (elapsedTime / scaleTime) * (selectedScale - baseScale);
+            float nextScale = baseScale + (elapsedTime / scaleTime) * (selectedScale - baseScale);
             transform.localScale = new Vector3(nextScale, nextScale, nextScale);
             yield return null;
         }
@@ -74,5 +74,10 @@ public class DraggableLetter : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         image.raycastTarget = true;
         transform.localScale = endScale;
         OnLetterSlotDrop?.Invoke();
+    }
+
+    void OnDestroy()
+    {
+        OnLetterSlotDrop = null;
     }
 }

@@ -7,17 +7,18 @@ public class UIManager : MonoBehaviour
     public static UIManager instance;
 
     [SerializeField] private GameObject gamePanel;
-    [SerializeField] private GameObject loadingPanel;
+    [SerializeField] private GameObject endGamePanel;
 
     void Awake()
     {
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
-            
-        } else {
+        }
+        else
+        {
             Destroy(gameObject);
+            instance = this;
         }
     }
 
@@ -31,13 +32,14 @@ public class UIManager : MonoBehaviour
         gamePanel.SetActive(false);
     }
 
-    public void ShowLoadingPanel()
+    public void ShowEndGamePanel()
     {
-        loadingPanel.SetActive(true);
+        endGamePanel.SetActive(true);
     }
 
-    public void HideLoadingPanel()
+    public void HideEndGamePanel()
     {
-        loadingPanel.SetActive(false);
+        endGamePanel.SetActive(false);
     }
+
 }
