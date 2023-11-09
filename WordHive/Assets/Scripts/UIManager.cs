@@ -18,7 +18,6 @@ public class UIManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
-            instance = this;
         }
     }
 
