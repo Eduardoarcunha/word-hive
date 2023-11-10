@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class LivesContainer : MonoBehaviour
+public class LifesContainer : MonoBehaviour
 {
     [SerializeField] private TMP_Text remaingTimeText;
-    [SerializeField] private TMP_Text livesText;
+    [SerializeField] private TMP_Text lifesText;
 
 
     // Update is called once per frame
@@ -17,8 +17,15 @@ public class LivesContainer : MonoBehaviour
         int seconds = remainingTimeInSeconds % 60;
         string remainingTimeFormatted = string.Format("{0:00}:{1:00}", minutes, seconds);
 
-        livesText.text = UserManager.instance.GetLives().ToString();
+        lifesText.text = UserManager.instance.GetLifes().ToString();
+        if (UserManager.instance.GetLifes() == UserManager.MAX_LIVES)
+        {
+            remaingTimeText.text = " ";
+        }
+        else
+        {
+            remaingTimeText.text = remainingTimeFormatted;
+        }
 
-        remaingTimeText.text = remainingTimeFormatted;
     }
 }

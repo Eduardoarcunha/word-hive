@@ -43,8 +43,15 @@ public class ButtonHandler : MonoBehaviour
     {
         if (btnAnimationCoroutine == null)
         {
-            Loader.instance.LoadScene(1);
-            btnAnimationCoroutine = StartCoroutine(SimpleBtnAnimation());
+            if (UserManager.instance.GetLifes() > 0)
+            {
+                Loader.instance.LoadScene(1);
+                btnAnimationCoroutine = StartCoroutine(SimpleBtnAnimation());
+            }
+            else
+            {
+                Debug.Log("No lifes");
+            }
         }
     }
 

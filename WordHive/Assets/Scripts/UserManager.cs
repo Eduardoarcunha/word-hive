@@ -9,13 +9,13 @@ public class UserManager : MonoBehaviour
     private int id;
     private int wonGames;
     private int totalGames;
-    private int lives;
+    private int lifes;
 
     private int currentTime;
     private int lastLifeGainedTime;
 
     const int LIFE_TIMER = 60 * 60 / 2;
-    const int MAX_LIVES = 5;
+    public const int MAX_LIVES = 5;
 
 
     void Awake()
@@ -34,7 +34,7 @@ public class UserManager : MonoBehaviour
         }
 
         // PlayerPrefs.DeleteAll();
-        // PlayerPrefs.SetInt("lives", 3);
+        // PlayerPrefs.SetInt("lifes", 3);
     }
 
     void Start()
@@ -42,14 +42,14 @@ public class UserManager : MonoBehaviour
         id = PlayerPrefs.GetInt("id");
         wonGames = PlayerPrefs.GetInt("wonGames");
         totalGames = PlayerPrefs.GetInt("totalGames");
-        lives = PlayerPrefs.GetInt("lives");
+        lifes = PlayerPrefs.GetInt("lifes");
 
         lastLifeGainedTime = PlayerPrefs.GetInt("lastLifeGainedTime");
         currentTime = GetCurrentTimeInSeconds();
 
         Debug.Log("current time: " + currentTime);
         Debug.Log("last life gained time: " + lastLifeGainedTime);
-        Debug.Log("lives: " + lives);
+        Debug.Log("lifes: " + lifes);
 
         CheckLifesAtStart();
     }
@@ -59,9 +59,9 @@ public class UserManager : MonoBehaviour
         currentTime = GetCurrentTimeInSeconds();
         if (currentTime - lastLifeGainedTime > LIFE_TIMER)
         {
-            if (lives < MAX_LIVES)
+            if (lifes < MAX_LIVES)
             {
-                AddLife();
+                IncreaseLife();
             }
             lastLifeGainedTime = currentTime;
             PlayerPrefs.SetInt("lastLifeGainedTime", lastLifeGainedTime);
@@ -70,13 +70,23 @@ public class UserManager : MonoBehaviour
 
     void CheckLifesAtStart()
     {
-        int newLives = Mathf.Min(MAX_LIVES - lives, (currentTime - lastLifeGainedTime) / LIFE_TIMER);
+        int newLives = Mathf.Min(MAX_LIVES - lifes, (currentTime - lastLifeGainedTime) / LIFE_TIMER);
         if (newLives > 0)
         {
-            Debug.Log("Adding " + newLives + " lives");
+            Debug.Log("Adding " + newLives + " lifes");
             for (int i = 0; i < newLives; i++)
             {
-                AddLife();
+                IncreaseLife();
+            }
+            lastLifeGainedTime = currentTime;
+            PlayerPrefs.SetInt("lastLifeGainedTime", lastLifeGainedTime);
+        }
+
+        if (currentTime < lastLifeGainedTime)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                IncreaseLife();
             }
             lastLifeGainedTime = currentTime;
             PlayerPrefs.SetInt("lastLifeGainedTime", lastLifeGainedTime);
@@ -90,16 +100,22 @@ public class UserManager : MonoBehaviour
         return currentTime.Hour * 3600 + currentTime.Minute * 60 + currentTime.Second;
     }
 
-    private void AddLife()
-    {
-        lives++;
-        PlayerPrefs.SetInt("lives", lives);
-    }
-
     public int GetRemainingTime()
     {
         int remainingTime = LIFE_TIMER - (currentTime - lastLifeGainedTime);
         return remainingTime;
+    }
+
+    private void IncreaseLife()
+    {
+        lifes++;
+        PlayerPrefs.SetInt("lifes", lifes);
+    }
+
+    public void DecreaseLifes()
+    {
+        lifes--;
+        PlayerPrefs.SetInt("lifes", lifes);
     }
 
     public void SetId(int id)
@@ -115,21 +131,18 @@ public class UserManager : MonoBehaviour
         {
             wonGames++;
         }
+        else
+        {
+            DecreaseLifes();
+        }
         PlayerPrefs.SetInt("wonGames", wonGames);
         PlayerPrefs.SetInt("totalGames", totalGames);
     }
 
-    public void PlayGame()
+    public int GetLifes()
     {
-        lives--;
-        PlayerPrefs.SetInt("lives", lives);
+        return lifes;
     }
-
-    public int GetLives()
-    {
-        return lives;
-    }
-
 
     private void OnApplicationQuit()
     {

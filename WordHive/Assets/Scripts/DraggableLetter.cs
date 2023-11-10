@@ -18,7 +18,7 @@ public class DraggableLetter : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public void OnBeginDrag(PointerEventData eventData)
     {
         parentAfterDrag = transform.parent;
-        transform.SetParent(transform.parent.parent.parent.parent);
+        transform.SetParent(transform.parent.parent.parent.parent.parent);
         transform.SetAsLastSibling();
         StartCoroutine(ScaleOverTime(new Vector3(selectedScale, selectedScale, selectedScale)));
         image.raycastTarget = false;
