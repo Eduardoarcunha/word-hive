@@ -12,7 +12,8 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private GameObject endGamePanel;
     [SerializeField] private TMP_Text endGamePanelTitle;
-    [SerializeField] private TMP_Text endGamePanelStats;
+    [SerializeField] private TMP_Text endGameTotalGamesText;
+    [SerializeField] private TMP_Text endGameWinPercentText;
     private int totalGames;
     private int wonGames;
 
@@ -48,7 +49,8 @@ public class UIManager : MonoBehaviour
         endGamePanelTitle.text = won ? "Victory" : "Defeat";
         wonGames = PlayerPrefs.GetInt("wonGames");
         totalGames = PlayerPrefs.GetInt("totalGames");
-        endGamePanelStats.text = wonGames + " / " + totalGames;
+        endGameTotalGamesText.text = totalGames.ToString();
+        endGameWinPercentText.text = (totalGames == 0) ? "0%" : ((int)((float)wonGames / (float)totalGames * 100)).ToString() + "%";
         endGamePanel.SetActive(true);
     }
 
