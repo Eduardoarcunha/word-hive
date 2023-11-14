@@ -171,11 +171,11 @@ public class LevelManager : MonoBehaviour
         bool wonGame = CheckBoard();
         if (wonGame)
         {
-            EndGame(wonGame);
+            StartCoroutine(EndGame(wonGame));
         }
         else if (remainingMoves == 0)
         {
-            EndGame(wonGame);
+            StartCoroutine(EndGame(wonGame));
         }
     }
 
@@ -243,10 +243,14 @@ public class LevelManager : MonoBehaviour
         return letterInCorrectPlaceAppearances < letterAppearancesInWord;
     }
 
-    void EndGame(bool won)
+    private IEnumerator EndGame(bool won)
     {
         UserManager.instance.EndGame(won);
-        UIManager.instance.ShowEndGamePanel(won);
+        Loader.instance.WipeIn();
+        yield return new WaitForSeconds(1f);
+        UIManager.instance.ShowEndGameCanvas(won, answerDict);
+        Loader.instance.WipeOut();
+        yield return new WaitForSeconds(1f);
     }
 
     void OnDestroy()

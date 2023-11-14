@@ -7,13 +7,14 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
-    [SerializeField] private GameObject gamePanel;
+    [SerializeField] private GameObject gameCanvas;
     [SerializeField] private TMP_Text remainingMovesText;
 
-    [SerializeField] private GameObject endGamePanel;
-    [SerializeField] private TMP_Text endGamePanelTitle;
-    [SerializeField] private TMP_Text endGameTotalGamesText;
-    [SerializeField] private TMP_Text endGameWinPercentText;
+    [SerializeField] private GameObject endGameCanvas;
+    [SerializeField] private GameObject endGameGrid;
+    [SerializeField] private TMP_Text endGameCanvasTitle;
+    [SerializeField] private TMP_Text endGameTotalGamesNumber;
+    [SerializeField] private TMP_Text endGameWinPercentNumber;
     private int totalGames;
     private int wonGames;
 
@@ -29,14 +30,14 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void ShowGamePanel()
+    public void ShowGameCanvas()
     {
-        gamePanel.SetActive(true);
+        gameCanvas.SetActive(true);
     }
 
-    public void HideGamePanel()
+    public void HideGameCanvas()
     {
-        gamePanel.SetActive(false);
+        gameCanvas.SetActive(false);
     }
 
     public void UpdateRemainingMovesText(int remainingMoves)
@@ -44,19 +45,29 @@ public class UIManager : MonoBehaviour
         remainingMovesText.text = remainingMoves.ToString() + " moves left";
     }
 
-    public void ShowEndGamePanel(bool won)
+    public void ShowEndGameCanvas(bool won, Dictionary<int, char?> answers)
     {
-        endGamePanelTitle.text = won ? "Victory" : "Defeat";
+        endGameCanvasTitle.text = won ? "Victory" : "Defeat";
         wonGames = PlayerPrefs.GetInt("wonGames");
         totalGames = PlayerPrefs.GetInt("totalGames");
-        endGameTotalGamesText.text = totalGames.ToString();
-        endGameWinPercentText.text = (totalGames == 0) ? "0%" : ((int)((float)wonGames / (float)totalGames * 100)).ToString() + "%";
-        endGamePanel.SetActive(true);
+        endGameTotalGamesNumber.text = totalGames.ToString();
+        endGameWinPercentNumber.text = (totalGames == 0) ? "0%" : ((int)((float)wonGames / (float)totalGames * 100)).ToString() + "%";
+        SetAnswerGrid(answers);
+        endGameCanvas.SetActive(true);
     }
 
-    public void HideEndGamePanel()
+    public void HideEndGameCanvas()
     {
-        endGamePanel.SetActive(false);
+        endGameCanvas.SetActive(false);
+    }
+
+    private void SetAnswerGrid(Dictionary<int, char?> answers)
+    {
+        for (int i = 0; i < 25; i++)
+        {
+            if (i / 5 % 2 == 1 && i % 2 == 0) continue;
+            endGameGrid.transform.GetChild(i).GetComponentInChildren<TextMeshProUGUI>().text = answers[i].ToString();
+        }
     }
 
 }

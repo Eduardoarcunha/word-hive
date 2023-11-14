@@ -8,6 +8,7 @@ public class LetterSlot : MonoBehaviour, IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
+        AudioManager.instance.PlaySound("ReleaseDrag");
         if (transform.childCount == 0)
         {
             GameObject dropped = eventData.pointerDrag;

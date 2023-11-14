@@ -50,6 +50,7 @@ public class ButtonHandler : MonoBehaviour
             }
             else
             {
+                // AdsManager.instance.ShowAdsPanel();
                 Debug.Log("No lifes");
             }
         }
@@ -64,21 +65,25 @@ public class ButtonHandler : MonoBehaviour
         }
     }
 
-    public void PlayAnotherGame()
+    public void ClosePopup()
     {
         if (btnAnimationCoroutine == null)
         {
-            Loader.instance.LoadScene(1);
-            btnAnimationCoroutine = StartCoroutine(SimpleBtnAnimation());
+            AdsManager.instance.HideAdsPanel();
+            // btnAnimationCoroutine = StartCoroutine(SimpleBtnAnimation(true));
         }
     }
 
+
     private IEnumerator SimpleBtnAnimation()
     {
+        AudioManager.instance.PlaySound("ButtonSound");
         yield return StartCoroutine(AnimateScaleAndColor(targetScale, targetColor));
         yield return StartCoroutine(AnimateScaleAndColor(originalScale, originalColor));
 
         btnAnimationCoroutine = null;
+
+
     }
 
     private IEnumerator AnimateScaleAndColor(Vector3 scale, Color color)
@@ -115,6 +120,7 @@ public class ButtonHandler : MonoBehaviour
         {
             buttonImage.color = color;
         }
+
     }
 
     private float EaseInOutQuad(float t)

@@ -17,6 +17,7 @@ public class DraggableLetter : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        AudioManager.instance.PlaySound("Drag");
         parentAfterDrag = transform.parent;
         transform.SetParent(transform.parent.parent.parent.parent.parent);
         transform.SetAsLastSibling();
