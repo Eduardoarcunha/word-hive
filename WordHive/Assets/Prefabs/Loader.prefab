@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 1339428091960461781}
+  hiveImage: {fileID: 7037916449396170437}
 --- !u!1 &813826428902829979
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,6 +9,7 @@ public class Loader : MonoBehaviour
 {
     public static Loader instance;
     public Animator animator;
+    public GameObject hiveImage;
 
     void Awake()
     {
@@ -23,6 +24,16 @@ public class Loader : MonoBehaviour
             Destroy(gameObject);
         }
 
+    }
+
+    void Start()
+    {
+        // get current scene
+        Scene currentScene = SceneManager.GetActiveScene();
+        if (currentScene.buildIndex == 0)
+        {
+            AudioManager.instance.PlaySound("MenuMusic");
+        }
     }
 
     public void LoadScene(int sceneId)
@@ -42,11 +53,22 @@ public class Loader : MonoBehaviour
             yield return null;
         }
 
+
         if (sceneId != 1)
         {
             yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1 && !animator.IsInTransition(0));
             WipeOut();
+            StartCoroutine(AudioManager.instance.SetVolume("MenuMusic", .2f));
         }
+        else
+        {
+            StartCoroutine(AudioManager.instance.SetVolume("MenuMusic", .1f));
+        }
+    }
+
+    public IEnumerator WaitLoaderAnimation()
+    {
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1 && !animator.IsInTransition(0));
     }
 
     public void WipeIn()
@@ -58,4 +80,5 @@ public class Loader : MonoBehaviour
     {
         animator.SetTrigger("Out");
     }
+
 }

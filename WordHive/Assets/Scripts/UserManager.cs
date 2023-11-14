@@ -34,7 +34,7 @@ public class UserManager : MonoBehaviour
         }
 
         // PlayerPrefs.DeleteAll();
-        // PlayerPrefs.SetInt("lifes", 3);
+        PlayerPrefs.SetInt("lifes", 1);
     }
 
     void Start()
@@ -76,7 +76,10 @@ public class UserManager : MonoBehaviour
             Debug.Log("Adding " + newLives + " lifes");
             for (int i = 0; i < newLives; i++)
             {
-                IncreaseLife();
+                if (lifes < MAX_LIVES)
+                {
+                    IncreaseLife();
+                }
             }
             lastLifeGainedTime = currentTime;
             PlayerPrefs.SetInt("lastLifeGainedTime", lastLifeGainedTime);
