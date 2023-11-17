@@ -50,7 +50,7 @@ public class ButtonHandler : MonoBehaviour
             }
             else
             {
-                // AdsManager.instance.ShowAdsPanel();
+                AdsManager.instance.ShowAdsPanel();
                 Debug.Log("No lifes");
             }
         }

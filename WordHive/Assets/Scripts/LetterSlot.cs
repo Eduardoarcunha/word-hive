@@ -1,10 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+
 public class LetterSlot : MonoBehaviour, IDropHandler
 {
+    public static event Action OnLetterSwap;
 
     public void OnDrop(PointerEventData eventData)
     {
@@ -50,6 +53,9 @@ public class LetterSlot : MonoBehaviour, IDropHandler
 
         current.transform.position = destinyPosition;
         currentDraggable.transform.SetParent(destinyParent);
+
+        yield return new WaitForSeconds(.1f);
+        OnLetterSwap?.Invoke();
     }
 
 }

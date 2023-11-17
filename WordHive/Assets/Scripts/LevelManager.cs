@@ -9,7 +9,6 @@ using System;
 
 public class LevelManager : MonoBehaviour
 {
-    private string url = "https://felipesbs.pythonanywhere.com/getGrid?lang=en&level=1";
 
     private const int GRID_SIZE = 25;
     private const int WORD_LENGTH = 5;
@@ -30,11 +29,15 @@ public class LevelManager : MonoBehaviour
 
     void Awake()
     {
-        DraggableLetter.OnLetterSlotDrop += MoveMade;
+        LetterSlot.OnLetterSwap += MoveMade;
     }
 
     void Start()
     {
+        int wonLastGame = PlayerPrefs.GetInt("wonLastGame");
+        int id = PlayerPrefs.GetInt("id");
+        string url = "https://felipesbs.pythonanywhere.com/getGrid?win=" + wonLastGame + "&id=" + id + "&language=en";
+
         StartCoroutine(RequestGame(url));
     }
 
@@ -66,7 +69,6 @@ public class LevelManager : MonoBehaviour
     void StartGame()
     {
         grid = GameObject.FindWithTag("Grid");
-        Debug.Log(grid);
         PopulateAnswerDictionary();
         string randomWord = RandomizeAnsDict();
         SetChilds(randomWord);
@@ -164,7 +166,7 @@ public class LevelManager : MonoBehaviour
     }
 
 
-    void MoveMade()
+    public void MoveMade()
     {
         remainingMoves--;
         UIManager.instance.UpdateRemainingMovesText(remainingMoves);
@@ -255,6 +257,6 @@ public class LevelManager : MonoBehaviour
 
     void OnDestroy()
     {
-        DraggableLetter.OnLetterSlotDrop -= MoveMade;
+        LetterSlot.OnLetterSwap -= MoveMade;
     }
 }

@@ -7,6 +7,8 @@ public class AdsManager : MonoBehaviour
     public static AdsManager instance;
 
     [SerializeField] private GameObject adsPanel;
+    [SerializeField] RewardedAdsButton rewardedAdsButton;
+
 
     void Awake()
     {
@@ -28,6 +30,7 @@ public class AdsManager : MonoBehaviour
     public void ShowAdsPanel()
     {
         adsPanel.SetActive(true);
+        rewardedAdsButton.LoadAd();
     }
 
     public void HideAdsPanel()

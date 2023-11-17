@@ -74,7 +74,7 @@ public class DraggableLetter : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         transform.SetParent(parentAfterDrag);
         image.raycastTarget = true;
         transform.localScale = endScale;
-        OnLetterSlotDrop?.Invoke();
+        // OnLetterSlotDrop?.Invoke();
     }
 
     void OnDestroy()

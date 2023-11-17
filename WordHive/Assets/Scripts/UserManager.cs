@@ -34,12 +34,18 @@ public class UserManager : MonoBehaviour
         }
 
         // PlayerPrefs.DeleteAll();
-        PlayerPrefs.SetInt("lifes", 1);
+        // PlayerPrefs.SetInt("lifes", 0);
     }
 
     void Start()
     {
         id = PlayerPrefs.GetInt("id");
+        if (id == 0)
+        {
+            id = UnityEngine.Random.Range(1, 1000000);
+            PlayerPrefs.SetInt("id", id);
+            PlayerPrefs.SetInt("wonLastGame", 1);
+        }
         wonGames = PlayerPrefs.GetInt("wonGames");
         totalGames = PlayerPrefs.GetInt("totalGames");
         lifes = PlayerPrefs.GetInt("lifes");
@@ -47,9 +53,9 @@ public class UserManager : MonoBehaviour
         lastLifeGainedTime = PlayerPrefs.GetInt("lastLifeGainedTime");
         currentTime = GetCurrentTimeInSeconds();
 
-        Debug.Log("current time: " + currentTime);
-        Debug.Log("last life gained time: " + lastLifeGainedTime);
-        Debug.Log("lifes: " + lifes);
+        // Debug.Log("current time: " + currentTime);
+        // Debug.Log("last life gained time: " + lastLifeGainedTime);
+        // Debug.Log("lifes: " + lifes);
 
         CheckLifesAtStart();
     }
@@ -73,7 +79,7 @@ public class UserManager : MonoBehaviour
         int newLives = Mathf.Min(MAX_LIVES - lifes, (currentTime - lastLifeGainedTime) / LIFE_TIMER);
         if (newLives > 0)
         {
-            Debug.Log("Adding " + newLives + " lifes");
+            // Debug.Log("Adding " + newLives + " lifes");
             for (int i = 0; i < newLives; i++)
             {
                 if (lifes < MAX_LIVES)
@@ -109,9 +115,10 @@ public class UserManager : MonoBehaviour
         return remainingTime;
     }
 
-    private void IncreaseLife()
+    public void IncreaseLife()
     {
         lifes++;
+        lifes = Mathf.Min(lifes, MAX_LIVES);
         PlayerPrefs.SetInt("lifes", lifes);
     }
 
@@ -133,10 +140,12 @@ public class UserManager : MonoBehaviour
         if (won)
         {
             wonGames++;
+            PlayerPrefs.SetInt("wonLastGame", 1);
         }
         else
         {
             DecreaseLifes();
+            PlayerPrefs.SetInt("wonLastGame", 0);
         }
         PlayerPrefs.SetInt("wonGames", wonGames);
         PlayerPrefs.SetInt("totalGames", totalGames);
