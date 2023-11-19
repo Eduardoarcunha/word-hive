@@ -32,7 +32,7 @@ public class LevelManager : MonoBehaviour
         gameLogic = GetComponent<GameLogic>();
         dataFetching = GetComponent<DataFetching>();
 
-        LetterSlot.OnLetterSwap += OnLetterSlotEvent;
+        LetterSlot.OnLetterSwap += OnLetterSwapEvent;
     }
 
     void Start()
@@ -47,7 +47,6 @@ public class LevelManager : MonoBehaviour
 
     public void StartGame()
     {
-        Debug.Log(answerWords);
         gridManagement.InitializeGrid(answerWords, GRID_SIZE, WORD_LENGTH);
         gameLogic.CheckBoard(answerWords, gridManagement.answerDict, GRID_SIZE, WORD_LENGTH);
         remainingMoves = TOTAL_MOVES;
@@ -55,7 +54,7 @@ public class LevelManager : MonoBehaviour
         Loader.instance.WipeOut();
     }
 
-    void OnLetterSlotEvent()
+    void OnLetterSwapEvent()
     {
         gameLogic.MoveMade(answerWords, gridManagement.answerDict, GRID_SIZE, WORD_LENGTH);
     }
@@ -63,6 +62,6 @@ public class LevelManager : MonoBehaviour
 
     void OnDestroy()
     {
-        LetterSlot.OnLetterSwap -= OnLetterSlotEvent;
+        LetterSlot.OnLetterSwap -= OnLetterSwapEvent;
     }
 }

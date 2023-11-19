@@ -15,6 +15,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text endGameCanvasTitle;
     [SerializeField] private TMP_Text endGameTotalGamesNumber;
     [SerializeField] private TMP_Text endGameWinPercentNumber;
+    [SerializeField] private TMP_Text endGameCurrentSequenceNumber;
+    [SerializeField] private TMP_Text endGameMaxSequenceNumber;
     private int totalGames;
     private int wonGames;
 
@@ -52,6 +54,8 @@ public class UIManager : MonoBehaviour
         totalGames = PlayerPrefs.GetInt("totalGames");
         endGameTotalGamesNumber.text = totalGames.ToString();
         endGameWinPercentNumber.text = (totalGames == 0) ? "0%" : ((int)((float)wonGames / (float)totalGames * 100)).ToString() + "%";
+        endGameCurrentSequenceNumber.text = PlayerPrefs.GetInt("currentSequence").ToString();
+        endGameMaxSequenceNumber.text = PlayerPrefs.GetInt("maxSequence").ToString();
         SetAnswerGrid(answers);
         endGameCanvas.SetActive(true);
     }

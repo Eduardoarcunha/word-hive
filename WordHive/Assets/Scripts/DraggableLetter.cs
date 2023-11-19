@@ -13,7 +13,6 @@ public class DraggableLetter : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     private float baseScale = 1f;
     private float selectedScale = 1.3f;
 
-    public static event Action OnLetterSlotDrop;
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -74,11 +73,5 @@ public class DraggableLetter : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         transform.SetParent(parentAfterDrag);
         image.raycastTarget = true;
         transform.localScale = endScale;
-        // OnLetterSlotDrop?.Invoke();
-    }
-
-    void OnDestroy()
-    {
-        OnLetterSlotDrop = null;
     }
 }

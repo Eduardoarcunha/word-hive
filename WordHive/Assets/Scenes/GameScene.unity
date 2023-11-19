@@ -345,6 +345,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -52.5
       objectReference: {fileID: 0}
+    - target: {fileID: 2672654945102657923, guid: c0191a66f1b48584c9006636414f04da, type: 3}
+      propertyPath: m_Name
+      value: CurrentSequenceText
+      objectReference: {fileID: 0}
+    - target: {fileID: 2893336206325219822, guid: c0191a66f1b48584c9006636414f04da, type: 3}
+      propertyPath: m_Name
+      value: CurrentSequenceNumber
+      objectReference: {fileID: 0}
     - target: {fileID: 3474189999052081488, guid: c0191a66f1b48584c9006636414f04da, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -427,7 +435,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4870699311772867324, guid: c0191a66f1b48584c9006636414f04da, type: 3}
       propertyPath: m_text
-      value: MAX SEQ
+      value: CUR SEQ
       objectReference: {fileID: 0}
     - target: {fileID: 7897440159934361368, guid: c0191a66f1b48584c9006636414f04da, type: 3}
       propertyPath: m_AnchorMax.y
@@ -458,6 +466,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c0191a66f1b48584c9006636414f04da, type: 3}
+--- !u!114 &46936246 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8996549819151083657, guid: c0191a66f1b48584c9006636414f04da, type: 3}
+  m_PrefabInstance: {fileID: 46936245}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &47565421
 GameObject:
   m_ObjectHideFlags: 0
@@ -1522,6 +1541,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -52.5
       objectReference: {fileID: 0}
+    - target: {fileID: 2672654945102657923, guid: c0191a66f1b48584c9006636414f04da, type: 3}
+      propertyPath: m_Name
+      value: MaxSeqText
+      objectReference: {fileID: 0}
+    - target: {fileID: 2893336206325219822, guid: c0191a66f1b48584c9006636414f04da, type: 3}
+      propertyPath: m_Name
+      value: MaxSeqNumber
+      objectReference: {fileID: 0}
     - target: {fileID: 3474189999052081488, guid: c0191a66f1b48584c9006636414f04da, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1604,7 +1631,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4870699311772867324, guid: c0191a66f1b48584c9006636414f04da, type: 3}
       propertyPath: m_text
-      value: CUR SEQ
+      value: MAX SEQ
       objectReference: {fileID: 0}
     - target: {fileID: 7897440159934361368, guid: c0191a66f1b48584c9006636414f04da, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1635,6 +1662,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c0191a66f1b48584c9006636414f04da, type: 3}
+--- !u!114 &201671344 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8996549819151083657, guid: c0191a66f1b48584c9006636414f04da, type: 3}
+  m_PrefabInstance: {fileID: 201671343}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &218943766
 GameObject:
   m_ObjectHideFlags: 0
@@ -7376,6 +7414,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -52.5
       objectReference: {fileID: 0}
+    - target: {fileID: 2672654945102657923, guid: c0191a66f1b48584c9006636414f04da, type: 3}
+      propertyPath: m_Name
+      value: WinPercentText
+      objectReference: {fileID: 0}
+    - target: {fileID: 2893336206325219822, guid: c0191a66f1b48584c9006636414f04da, type: 3}
+      propertyPath: m_Name
+      value: WinPercentNumber
+      objectReference: {fileID: 0}
     - target: {fileID: 3474189999052081488, guid: c0191a66f1b48584c9006636414f04da, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -8920,6 +8966,8 @@ MonoBehaviour:
   endGameCanvasTitle: {fileID: 218943769}
   endGameTotalGamesNumber: {fileID: 1344902511}
   endGameWinPercentNumber: {fileID: 1129702008}
+  endGameCurrentSequenceNumber: {fileID: 46936246}
+  endGameMaxSequenceNumber: {fileID: 201671344}
 --- !u!1 &2017152494
 GameObject:
   m_ObjectHideFlags: 0
