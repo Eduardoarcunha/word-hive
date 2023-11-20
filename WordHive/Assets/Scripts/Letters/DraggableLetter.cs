@@ -12,7 +12,27 @@ public class DraggableLetter : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     private float scaleTime = .1f;
     private float baseScale = 1f;
     private float selectedScale = 1.3f;
+    private bool isChecking = false;
 
+
+    void Awake()
+    {
+        LevelManager.OnCheckBoard += OnCheckBoardEvent;
+    }
+
+    private void OnCheckBoardEvent(bool isCorrect)
+    {
+        if (isCorrect)
+        {
+            isChecking = true;
+            image.raycastTarget = false;
+        }
+        else
+        {
+            isChecking = false;
+            image.raycastTarget = true;
+        }
+    }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -31,6 +51,8 @@ public class DraggableLetter : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        AudioManager.instance.PlaySound("ReleaseDrag");
+        transform.SetParent(parentAfterDrag);
         StartCoroutine(ReturnToOriginalPosition());
     }
 
@@ -50,6 +72,10 @@ public class DraggableLetter : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     private IEnumerator ReturnToOriginalPosition()
     {
+        // if (!isChecking)
+        // {
+        //     AudioManager.instance.PlaySound("ReleaseDrag");
+        // }
         float elapsedTime = 0.0f;
         float totalDuration = .15f;
 
@@ -70,8 +96,15 @@ public class DraggableLetter : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         }
 
         transform.position = destinyPosition;
-        transform.SetParent(parentAfterDrag);
-        image.raycastTarget = true;
+        if (!isChecking)
+        {
+            image.raycastTarget = true;
+        }
         transform.localScale = endScale;
+    }
+
+    void OnDestroy()
+    {
+        LevelManager.OnCheckBoard -= OnCheckBoardEvent;
     }
 }

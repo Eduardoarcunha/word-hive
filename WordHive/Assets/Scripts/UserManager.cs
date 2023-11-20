@@ -6,6 +6,9 @@ using UnityEngine;
 public class UserManager : MonoBehaviour
 {
     public static UserManager instance;
+
+    private WorldTimeAPI worldTimeAPI;
+
     private int id;
     private int wonGames;
     private int totalGames;
@@ -14,8 +17,15 @@ public class UserManager : MonoBehaviour
     private int currentTime;
     private int lastLifeGainedTime;
 
-    const int LIFE_TIMER = 60 * 60 / 2;
+    const int LIFE_COOLDOWN = 60 * 60 / 2; // 30 minutes
     public const int MAX_LIVES = 5;
+
+    // PlayerPrefs keys
+    private const string LifesKey = "lifes";
+    private const string IdKey = "id";
+    private const string WonGamesKey = "wonGames";
+    private const string TotalGamesKey = "totalGames";
+    private const string LastLifeGainedTimeKey = "lastLifeGainedTime";
 
 
     void Awake()
@@ -32,6 +42,8 @@ public class UserManager : MonoBehaviour
                 Destroy(gameObject);
             }
         }
+        worldTimeAPI = GetComponent<WorldTimeAPI>();
+        InitializeUserData();
 
         // PlayerPrefs.DeleteAll();
         // PlayerPrefs.SetInt("lifes", 0);
@@ -39,32 +51,14 @@ public class UserManager : MonoBehaviour
 
     void Start()
     {
-        id = PlayerPrefs.GetInt("id");
-        if (id == 0) // New user
-        {
-            id = UnityEngine.Random.Range(1, 1000000);
-            PlayerPrefs.SetInt("id", id);
-            PlayerPrefs.SetInt("wonLastGame", 1);
-            PlayerPrefs.SetInt("wonGames", 0);
-            PlayerPrefs.SetInt("totalGames", 0);
-            PlayerPrefs.SetInt("currentSequence", 0);
-            PlayerPrefs.SetInt("maxSequence", 0);
-        }
-        wonGames = PlayerPrefs.GetInt("wonGames");
-        totalGames = PlayerPrefs.GetInt("totalGames");
-        lifes = PlayerPrefs.GetInt("lifes");
-
-        lastLifeGainedTime = PlayerPrefs.GetInt("lastLifeGainedTime");
         currentTime = GetCurrentTimeInSeconds();
-
-
         CheckLifesAtStart();
     }
 
     void Update()
     {
         currentTime = GetCurrentTimeInSeconds();
-        if (currentTime - lastLifeGainedTime > LIFE_TIMER)
+        if (currentTime - lastLifeGainedTime > LIFE_COOLDOWN)
         {
             if (lifes < MAX_LIVES)
             {
@@ -75,9 +69,37 @@ public class UserManager : MonoBehaviour
         }
     }
 
+    private void InitializeUserData()
+    {
+        id = PlayerPrefs.GetInt(IdKey, 0);
+        if (id == 0) // New user
+        {
+            id = UnityEngine.Random.Range(1, 1000000);
+            PlayerPrefs.SetInt(IdKey, id);
+            ResetGameData();
+        }
+        LoadGameData();
+    }
+
+    private void ResetGameData()
+    {
+        PlayerPrefs.SetInt(WonGamesKey, 0);
+        PlayerPrefs.SetInt(TotalGamesKey, 0);
+        PlayerPrefs.SetInt(LifesKey, MAX_LIVES);
+        PlayerPrefs.SetInt(LastLifeGainedTimeKey, GetCurrentTimeInSeconds());
+    }
+
+    private void LoadGameData()
+    {
+        wonGames = PlayerPrefs.GetInt(WonGamesKey);
+        totalGames = PlayerPrefs.GetInt(TotalGamesKey);
+        lifes = PlayerPrefs.GetInt(LifesKey, MAX_LIVES);
+        lastLifeGainedTime = PlayerPrefs.GetInt(LastLifeGainedTimeKey, GetCurrentTimeInSeconds());
+    }
+
     void CheckLifesAtStart()
     {
-        int newLives = Mathf.Min(MAX_LIVES - lifes, (currentTime - lastLifeGainedTime) / LIFE_TIMER);
+        int newLives = Mathf.Min(MAX_LIVES - lifes, (currentTime - lastLifeGainedTime) / LIFE_COOLDOWN);
         if (newLives > 0)
         {
             for (int i = 0; i < newLives; i++)
@@ -102,17 +124,16 @@ public class UserManager : MonoBehaviour
         }
     }
 
-
     private int GetCurrentTimeInSeconds()
     {
-        DateTime currentTime = WorldTimeAPI.instance.GetCurrentDateTime();
+        DateTime currentTime = worldTimeAPI.GetCurrentDateTime();
         return currentTime.Hour * 3600 + currentTime.Minute * 60 + currentTime.Second;
     }
 
+
     public int GetRemainingTime()
     {
-        int remainingTime = LIFE_TIMER - (currentTime - lastLifeGainedTime);
-        return remainingTime;
+        return LIFE_COOLDOWN - (currentTime - lastLifeGainedTime);
     }
 
     public void IncreaseLife()

@@ -34,6 +34,9 @@ public class WorldTimeAPI : MonoBehaviour
     const string API_URL = "https://worldtimeapi.org/api/ip";
     [HideInInspector] public bool IsTimeLoaded = false;
     private DateTime currentDateTime = DateTime.Now;
+    private int retryCount = 0;
+    private const int maxRetries = 3; // Max number of retries
+    private const float retryDelay = 2.0f; // Delay between retries in seconds
 
     void Start()
     {
@@ -54,6 +57,13 @@ public class WorldTimeAPI : MonoBehaviour
             if (webRequest.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogError("Error: " + webRequest.error);
+                retryCount++;
+                if (retryCount <= maxRetries)
+                {
+                    Debug.Log("Retrying... Attempt: " + retryCount);
+                    yield return new WaitForSeconds(retryDelay);
+                    StartCoroutine(GetRealDateTimeFromAPI());
+                }
             }
             else
             {
@@ -61,6 +71,7 @@ public class WorldTimeAPI : MonoBehaviour
                 currentDateTime = DateTime.Parse(timeData.datetime);
                 IsTimeLoaded = true;
                 Debug.Log("Time successfully loaded.");
+                retryCount = 0; // Reset retry count after a successful attempt
             }
         }
     }

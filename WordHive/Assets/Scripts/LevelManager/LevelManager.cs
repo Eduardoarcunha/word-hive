@@ -9,25 +9,35 @@ using System;
 
 public class LevelManager : MonoBehaviour
 {
+    public static LevelManager instance;
+    public static Action<bool> OnCheckBoard;
+
     private const int GRID_SIZE = 25;
     private const int WORD_LENGTH = 5;
-    private const float RANDOM_LEVEL = .3f;
 
     private const int TOTAL_MOVES = 15;
     private int remainingMoves;
 
-
     private string[] answerWords = { "AMBOS", "AROMA", "AMADA", "ARARA", "BROCA", "SEADA" };
-
 
     private GridManagement gridManagement;
     private GameLogic gameLogic;
     private DataFetching dataFetching;
 
-
     void Awake()
     {
-        // LetterSlot.OnLSwaprSlotDrop += MoveMade;
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            if (instance != this)
+            {
+                Destroy(gameObject);
+            }
+        }
+
         gridManagement = GetComponent<GridManagement>();
         gameLogic = GetComponent<GameLogic>();
         dataFetching = GetComponent<DataFetching>();
@@ -54,9 +64,18 @@ public class LevelManager : MonoBehaviour
         Loader.instance.WipeOut();
     }
 
+
     void OnLetterSwapEvent()
     {
+        OnCheckBoard?.Invoke(true);
         gameLogic.MoveMade(answerWords, gridManagement.answerDict, GRID_SIZE, WORD_LENGTH);
+        StartCoroutine(DelayedEndOfCheckBoard()); // Start a coroutine for the delay
+    }
+
+    IEnumerator DelayedEndOfCheckBoard()
+    {
+        yield return new WaitForSeconds(.04f);
+        OnCheckBoard?.Invoke(false);
     }
 
 

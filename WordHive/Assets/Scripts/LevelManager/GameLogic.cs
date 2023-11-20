@@ -3,10 +3,12 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 using System.Collections;
+using System;
 
 public class GameLogic : MonoBehaviour
 {
     private int remainingMoves;
+    public bool isMoving = false;
     private const int TOTAL_MOVES = 15;
     private GridManagement gridManagement;
 
@@ -22,6 +24,7 @@ public class GameLogic : MonoBehaviour
 
     public void MoveMade(string[] answerWords, Dictionary<int, char?> answerDict, int gridSize, int wordLength)
     {
+        isMoving = true;
         remainingMoves--;
         UIManager.instance.UpdateRemainingMovesText(remainingMoves);
         bool wonGame = CheckBoard(answerWords, answerDict, gridSize, wordLength);
@@ -31,8 +34,16 @@ public class GameLogic : MonoBehaviour
         }
         else if (remainingMoves == 0)
         {
+            for (int i = 0; i < gridSize; i++)
+            {
+                if (i / wordLength % 2 == 1 && i % 2 == 0) continue;
+
+                GameObject letterObj = gridManagement.grid.transform.GetChild(i).GetChild(0).gameObject;
+                letterObj.GetComponent<DraggableLetter>().enabled = false;
+            }
             StartCoroutine(EndGame(wonGame, answerDict));
         }
+        isMoving = false;
     }
 
     public bool CheckBoard(string[] answerWords, Dictionary<int, char?> answerDict, int gridSize, int wordLength)
@@ -102,6 +113,15 @@ public class GameLogic : MonoBehaviour
     IEnumerator EndGame(bool won, Dictionary<int, char?> answerDict)
     {
         UserManager.instance.EndGame(won);
+        if (won)
+        {
+            AudioManager.instance.PlaySound("Win");
+        }
+        else
+        {
+            AudioManager.instance.PlaySound("Lose");
+        }
+        yield return new WaitForSeconds(1f);
         Loader.instance.WipeIn();
         yield return new WaitForSeconds(1f);
         UIManager.instance.ShowEndGameCanvas(won, answerDict);

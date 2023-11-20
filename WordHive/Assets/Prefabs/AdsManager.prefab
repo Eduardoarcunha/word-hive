@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 2385081072402660}
   - component: {fileID: 3553921288558538975}
   m_Layer: 5
-  m_Name: Image
+  m_Name: OutLineImg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -222,8 +222,9 @@ GameObject:
   - component: {fileID: 647362093274155332}
   - component: {fileID: 7189380498248522685}
   - component: {fileID: 3942438829193446977}
+  - component: {fileID: 5754018220242055616}
   m_Layer: 5
-  m_Name: Button
+  m_Name: RewardBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -329,7 +330,34 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7189380498248522685}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5754018220242055616}
+        m_TargetAssemblyTypeName: RewardedAdsButton, Assembly-CSharp
+        m_MethodName: ShowAd
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &5754018220242055616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2938733533392874754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 535603082cf700f4fbdaef3884036e3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _showAdButton: {fileID: 3942438829193446977}
+  _androidAdUnitId: Rewarded_Android
+  _iOSAdUnitId: Rewarded_iOS
 --- !u!1 &3734797924444710651
 GameObject:
   m_ObjectHideFlags: 0
@@ -424,7 +452,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1342427740835307320
 RectTransform:
   m_ObjectHideFlags: 0
@@ -518,6 +546,7 @@ GameObject:
   m_Component:
   - component: {fileID: 705995711505703575}
   - component: {fileID: 8528037111749038017}
+  - component: {fileID: 6360352852165923733}
   m_Layer: 0
   m_Name: AdsManager
   m_TagString: Untagged
@@ -553,7 +582,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdd14ce0dca251f4395bb082f29cbba8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adsPanel: {fileID: 0}
+  adsPanel: {fileID: 4402524640118263419}
+  rewardedAdsButton: {fileID: 5754018220242055616}
+--- !u!114 &6360352852165923733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4848994502793322922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a65851dee347654d944b8bb05e7f64d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _androidGameId: 5477995
+  _iOSGameId: 5477994
+  _testMode: 1
 --- !u!1 &4996128337291008305
 GameObject:
   m_ObjectHideFlags: 0
@@ -566,8 +611,9 @@ GameObject:
   - component: {fileID: 6413610211357541697}
   - component: {fileID: 7599907108201478223}
   - component: {fileID: 7080181657545930864}
+  - component: {fileID: 1746688551467837697}
   m_Layer: 5
-  m_Name: Button
+  m_Name: CloseBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -673,7 +719,33 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7599907108201478223}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1746688551467837697}
+        m_TargetAssemblyTypeName: ButtonHandler, Assembly-CSharp
+        m_MethodName: ClosePopup
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1746688551467837697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4996128337291008305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d1125759df38a1489b84950e20099b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetScale: {x: 1.1, y: 1.1, z: 1.1}
+  targetColor: {r: 0.8627451, g: 0.6313726, b: 0.11372549, a: 1}
 --- !u!1 &6861501963356019533
 GameObject:
   m_ObjectHideFlags: 0
@@ -686,7 +758,7 @@ GameObject:
   - component: {fileID: 9063194202228138653}
   - component: {fileID: 7445861170402678054}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: BgImg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

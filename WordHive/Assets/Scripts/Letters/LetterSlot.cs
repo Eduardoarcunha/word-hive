@@ -11,7 +11,7 @@ public class LetterSlot : MonoBehaviour, IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
-        AudioManager.instance.PlaySound("ReleaseDrag");
+        // AudioManager.instance.PlaySound("ReleaseDrag");
         if (transform.childCount == 0)
         {
             GameObject dropped = eventData.pointerDrag;
@@ -39,6 +39,7 @@ public class LetterSlot : MonoBehaviour, IDropHandler
         Vector3 startPosition = current.transform.position;
         Vector3 destinyPosition = draggableLetter.parentAfterDrag.transform.position;
         Transform destinyParent = draggableLetter.parentAfterDrag;
+        currentDraggable.transform.SetParent(destinyParent);
 
         draggableLetter.parentAfterDrag = transform;
 
@@ -52,9 +53,7 @@ public class LetterSlot : MonoBehaviour, IDropHandler
         }
 
         current.transform.position = destinyPosition;
-        currentDraggable.transform.SetParent(destinyParent);
 
-        yield return new WaitForSeconds(.1f);
         OnLetterSwap?.Invoke();
     }
 

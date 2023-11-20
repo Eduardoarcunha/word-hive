@@ -57,3 +57,15 @@ MonoBehaviour:
     pitch: 1
     loop: 1
     source: {fileID: 0}
+  - name: Drag
+    clip: {fileID: 8300000, guid: f307ae758dbeac443b4bfea3b0fe1966, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: ReleaseDrag
+    clip: {fileID: 8300000, guid: b4ea8ba72e792ef4ba159fdcbbf50d1c, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
