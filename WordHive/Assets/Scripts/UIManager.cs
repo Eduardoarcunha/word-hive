@@ -44,12 +44,43 @@ public class UIManager : MonoBehaviour
 
     public void UpdateRemainingMovesText(int remainingMoves)
     {
-        remainingMovesText.text = remainingMoves.ToString() + " moves left";
+        string moves_left;
+        if (PlayerPrefs.GetString("language") == "pt")
+        {
+            moves_left = " movimentos restantes";
+        }
+        else
+        {
+            moves_left = " moves left";
+        }
+        remainingMovesText.text = remainingMoves.ToString() + moves_left;
     }
 
     public void ShowEndGameCanvas(bool won, Dictionary<int, char?> answers)
     {
-        endGameCanvasTitle.text = won ? "Victory" : "Defeat";
+        if (won)
+        {
+            if (PlayerPrefs.GetString("language") == "pt")
+            {
+                endGameCanvasTitle.text = "Vitória";
+            }
+            else
+            {
+                endGameCanvasTitle.text = "Victory";
+            }
+        }
+        else
+        {
+            if (PlayerPrefs.GetString("language") == "pt")
+            {
+                endGameCanvasTitle.text = "Derrota";
+            }
+            else
+            {
+                endGameCanvasTitle.text = "Defeat";
+            }
+        }
+
         wonGames = PlayerPrefs.GetInt("wonGames");
         totalGames = PlayerPrefs.GetInt("totalGames");
         endGameTotalGamesNumber.text = totalGames.ToString();

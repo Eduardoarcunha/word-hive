@@ -65,12 +65,39 @@ public class ButtonHandler : MonoBehaviour
         }
     }
 
+    public void OpenOptions()
+    {
+        if (btnAnimationCoroutine == null)
+        {
+            btnAnimationCoroutine = StartCoroutine(SimpleBtnAnimation());
+            StartCoroutine(Loader.instance.LoadOptions());
+        }
+    }
+
+    public void CloseOptions()
+    {
+        if (btnAnimationCoroutine == null)
+        {
+            Loader.instance.LoadScene(0);
+            btnAnimationCoroutine = StartCoroutine(SimpleBtnAnimation());
+        }
+    }
+
     public void ClosePopup()
     {
         if (btnAnimationCoroutine == null)
         {
             AdsManager.instance.HideAdsPanel();
             // btnAnimationCoroutine = StartCoroutine(SimpleBtnAnimation(true));
+        }
+    }
+
+    public void ChangeLanguage(string language)
+    {
+        if (PlayerPrefs.GetString("language") != language)
+        {
+            PlayerPrefs.SetString("language", language);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 

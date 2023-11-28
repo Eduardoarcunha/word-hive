@@ -8,6 +8,7 @@ public class UserManager : MonoBehaviour
     public static UserManager instance;
 
     private WorldTimeAPI worldTimeAPI;
+    private IpAPI ipAPI;
 
     private int id;
     private int wonGames;
@@ -18,7 +19,7 @@ public class UserManager : MonoBehaviour
     private int lastLifeGainedTime;
 
     const int LIFE_COOLDOWN = 60 * 60 / 2; // 30 minutes
-    public const int MAX_LIVES = 5;
+    public const int MAX_LIVES = 3;
 
     // PlayerPrefs keys
     private const string LifesKey = "lifes";
@@ -26,6 +27,8 @@ public class UserManager : MonoBehaviour
     private const string WonGamesKey = "wonGames";
     private const string TotalGamesKey = "totalGames";
     private const string LastLifeGainedTimeKey = "lastLifeGainedTime";
+    private const string Level = "level";
+    private const string Language = "language";
 
 
     void Awake()
@@ -43,10 +46,12 @@ public class UserManager : MonoBehaviour
             }
         }
         worldTimeAPI = GetComponent<WorldTimeAPI>();
-        InitializeUserData();
+        ipAPI = GetComponent<IpAPI>();
 
         // PlayerPrefs.DeleteAll();
         // PlayerPrefs.SetInt("lifes", 0);
+
+        InitializeUserData();
     }
 
     void Start()
@@ -74,8 +79,7 @@ public class UserManager : MonoBehaviour
         id = PlayerPrefs.GetInt(IdKey, 0);
         if (id == 0) // New user
         {
-            id = UnityEngine.Random.Range(1, 1000000);
-            PlayerPrefs.SetInt(IdKey, id);
+            ipAPI.SetId();
             ResetGameData();
         }
         LoadGameData();
@@ -85,29 +89,30 @@ public class UserManager : MonoBehaviour
     {
         PlayerPrefs.SetInt(WonGamesKey, 0);
         PlayerPrefs.SetInt(TotalGamesKey, 0);
-        PlayerPrefs.SetInt(LifesKey, MAX_LIVES);
+        PlayerPrefs.SetInt(LifesKey, 1);
         PlayerPrefs.SetInt(LastLifeGainedTimeKey, GetCurrentTimeInSeconds());
+        PlayerPrefs.SetInt(Level, 1);
+        PlayerPrefs.SetString(Language, "pt");
     }
 
     private void LoadGameData()
     {
         wonGames = PlayerPrefs.GetInt(WonGamesKey);
         totalGames = PlayerPrefs.GetInt(TotalGamesKey);
-        lifes = PlayerPrefs.GetInt(LifesKey, MAX_LIVES);
+        lifes = PlayerPrefs.GetInt(LifesKey);
+        if (lifes > MAX_LIVES) lifes = MAX_LIVES;
+        PlayerPrefs.SetInt(LifesKey, lifes);
         lastLifeGainedTime = PlayerPrefs.GetInt(LastLifeGainedTimeKey, GetCurrentTimeInSeconds());
     }
 
     void CheckLifesAtStart()
     {
-        int newLives = Mathf.Min(MAX_LIVES - lifes, (currentTime - lastLifeGainedTime) / LIFE_COOLDOWN);
+        int newLives = Mathf.Min(lifes, (currentTime - lastLifeGainedTime) / LIFE_COOLDOWN);
         if (newLives > 0)
         {
             for (int i = 0; i < newLives; i++)
             {
-                if (lifes < MAX_LIVES)
-                {
-                    IncreaseLife();
-                }
+                IncreaseLife();
             }
             lastLifeGainedTime = currentTime;
             PlayerPrefs.SetInt("lastLifeGainedTime", lastLifeGainedTime);
@@ -138,6 +143,7 @@ public class UserManager : MonoBehaviour
 
     public void IncreaseLife()
     {
+        Debug.Log("Increase life");
         lifes++;
         lifes = Mathf.Min(lifes, MAX_LIVES);
         PlayerPrefs.SetInt("lifes", lifes);
@@ -165,6 +171,7 @@ public class UserManager : MonoBehaviour
             PlayerPrefs.SetInt("wonLastGame", 1);
             PlayerPrefs.SetInt("currentSequence", PlayerPrefs.GetInt("currentSequence") + 1);
             PlayerPrefs.SetInt("maxSequence", Mathf.Max(PlayerPrefs.GetInt("maxSequence"), PlayerPrefs.GetInt("currentSequence")));
+            PlayerPrefs.SetInt(Level, PlayerPrefs.GetInt(Level) + 1);
         }
         else
         {
@@ -179,6 +186,11 @@ public class UserManager : MonoBehaviour
     public int GetLifes()
     {
         return lifes;
+    }
+
+    public int GetLevel()
+    {
+        return PlayerPrefs.GetInt(Level);
     }
 
 }

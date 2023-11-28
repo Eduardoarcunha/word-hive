@@ -44,7 +44,7 @@ public class Loader : MonoBehaviour
     IEnumerator LoadSceneAsync(int sceneId)
     {
         WipeIn();
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(1f);
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneId);
 
 
@@ -79,6 +79,14 @@ public class Loader : MonoBehaviour
     public void WipeOut()
     {
         animator.SetTrigger("Out");
+    }
+
+    public IEnumerator LoadOptions()
+    {
+        WipeIn();
+        yield return new WaitForSeconds(1f);
+        MenuUIManager.instance.ShowOptionsCanvas();
+        WipeOut();
     }
 
 }

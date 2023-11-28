@@ -8,7 +8,7 @@ public class GridManagement : MonoBehaviour
 {
     public GameObject grid;
     public Dictionary<int, char?> answerDict = new Dictionary<int, char?>();
-    private const float RANDOM_LEVEL = .3f;
+    private const float RANDOM_LEVEL = .4f;
 
     public void InitializeGrid(string[] answerWords, int gridSize, int wordLength)
     {

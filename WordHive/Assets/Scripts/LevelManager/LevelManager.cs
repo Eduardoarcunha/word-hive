@@ -49,7 +49,9 @@ public class LevelManager : MonoBehaviour
     {
         int wonLastGame = PlayerPrefs.GetInt("wonLastGame");
         int id = PlayerPrefs.GetInt("id");
-        string url = "https://felipesbs.pythonanywhere.com/getGrid?win=" + wonLastGame + "&id=" + id + "&language=en";
+        string language = PlayerPrefs.GetString("language");
+        string url = "https://felipesbs.pythonanywhere.com/getGrid?win=" + wonLastGame + "&id=" + id + "&language=" + language;
+        Debug.Log(url);
 
         StartCoroutine(dataFetching.RequestGame(url, answerWords));
     }
