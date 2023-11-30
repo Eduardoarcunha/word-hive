@@ -89,7 +89,7 @@ public class UserManager : MonoBehaviour
     {
         PlayerPrefs.SetInt(WonGamesKey, 0);
         PlayerPrefs.SetInt(TotalGamesKey, 0);
-        PlayerPrefs.SetInt(LifesKey, 1);
+        PlayerPrefs.SetInt(LifesKey, 3);
         PlayerPrefs.SetInt(LastLifeGainedTimeKey, GetCurrentTimeInSeconds());
         PlayerPrefs.SetInt(Level, 1);
         PlayerPrefs.SetString(Language, "en");
