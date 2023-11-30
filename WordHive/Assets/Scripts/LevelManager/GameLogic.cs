@@ -12,9 +12,10 @@ public class GameLogic : MonoBehaviour
     private const int TOTAL_MOVES = 15;
     private GridManagement gridManagement;
 
-    private Color greenColor = new Color32(24, 111, 101, 255);  // #186f65
-    private Color yellowColor = new Color32(255, 193, 2, 255);  // #FFC102
-    private Color whiteColor = new Color32(190, 191, 173, 255); // #d2e0fb
+    private Color greenColor = new Color32(111, 176, 92, 255);  // #186f65
+    private Color yellowColor = new Color32(233, 186, 58, 255);  // #FFC102
+    private Color whiteColor = new Color32(237, 239, 241, 255); // #d2e0fb
+    private Color blackColor = new Color32(20, 20, 20, 255); // #000000
 
     void Start()
     {
@@ -63,6 +64,7 @@ public class GameLogic : MonoBehaviour
             if (answerDict[i] == letter)
             {
                 letterObj.GetComponentInChildren<Image>().color = greenColor;
+                letterObj.GetComponentInChildren<TextMeshProUGUI>().color = Color.white;
                 letterObj.GetComponent<DraggableLetter>().enabled = false; // Disable green letters
             }
             else
@@ -73,10 +75,12 @@ public class GameLogic : MonoBehaviour
                 if (incorrectPosition)
                 {
                     letterObj.GetComponentInChildren<Image>().color = yellowColor;
+                    letterObj.GetComponentInChildren<TextMeshProUGUI>().color = Color.white;
                 }
                 else
                 {
                     letterObj.GetComponentInChildren<Image>().color = whiteColor;
+                    letterObj.GetComponentInChildren<TextMeshProUGUI>().color = blackColor;
                 }
             }
         }
